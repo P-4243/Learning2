@@ -1,0 +1,40 @@
+package com.hendisantika.springbootorders.controller;
+
+import com.hendisantika.springbootorders.model.Product;
+import com.hendisantika.springbootorders.repository.ProductRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.util.List;
+
+@RequiredArgsConstructor
+@RequestMapping("products")
+@Controller
+@Slf4j
+public class ProductWebController {
+    private final ProductRepository productRepository = null;
+
+    @GetMapping("list")
+    public String listProducts(Model model) {
+        List<Product> products = productRepository.findAll();
+        model.addAttribute("products", products);
+        return "product/product_list";
+    }
+
+    @GetMapping("create")
+    public String showProductForm(Model model) {
+        model.addAttribute("product", new Product());
+        return "product/product_add";
+    }
+
+    @PostMapping("create")
+    public String addProduct(Model model, Product product) {
+        model.addAttribute("product", productRepository.save(product));
+        return "redirect:/products/list";
+    }
+}
